@@ -37,6 +37,8 @@ rm -rf build
 mkdir build
 cd build
 
+COMMAND="npx croct@latest --stateless --no-interaction --dnd use ${CROCT_PROJECT_TEMPLATE}"
+
 if is_expired "${CROCT_CLI_TOKEN:-}"; then
   env -u CROCT_TOKEN \
     CROCT_API_KEY="$CROCT_API_KEY" \
