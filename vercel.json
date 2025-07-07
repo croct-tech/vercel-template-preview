@@ -3,5 +3,5 @@
   "framework": "nextjs",
   "installCommand": "./install.sh",
   "buildCommand": "next build",
-  "outputDirectory": "build"
+  "outputDirectory": ".next"
 }
