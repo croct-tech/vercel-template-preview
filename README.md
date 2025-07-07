@@ -26,7 +26,7 @@ vercel pull
 ./scaffold.sh
 ```
 
-The script uses environment variables to determine which template to use and authenticate with Croct.
+The script uses environment variables to determine which template to use.
 
 ## Explore other templates
 
