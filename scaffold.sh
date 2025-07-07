@@ -1,5 +1,43 @@
 #!/usr/bin/env bash
 set -e
+set -a
+
+for envfile in $(find . -type f \( -name ".env.local" -o -name ".env.development.local" \)); do
+  while IFS= read -r line; do
+    if [[ -z "$line" || "$line" == \#* ]]; then
+      continue
+    fi
+
+    line="${line%%#*}"
+
+    key="${line%%=*}"
+    val="${line#*=}"
+
+    val="${val%\"}"
+    val="${val#\"}"
+
+    export "$key=$val"
+
+  done < "$envfile"
+done
+
+set +a
+
+# Check required env vars
+required_vars=(
+  "CROCT_PROJECT_TEMPLATE"
+  "CROCT_WORKSPACE"
+  "CROCT_ORGANIZATION"
+  "CROCT_DEV_APP"
+  "CROCT_PROD_APP"
+)
+
+for var in "${required_vars[@]}"; do
+  if [ -z "${!var}" ]; then
+    echo "Environment variable '$var' is missing."
+    exit 1
+  fi
+done
 
 is_expired() {
   local jwt="$1"
@@ -14,7 +52,6 @@ is_expired() {
     payload_base64="${payload_base64}="
   fi
 
-  # Decode and get exp
   local payload_json
   payload_json="$(echo "$payload_base64" | tr '_-' '/+' | base64 -d 2>/dev/null)"
   local exp
@@ -32,7 +69,6 @@ is_expired() {
   fi
 }
 
-# Prepare clean build dir
 rm -rf build
 mkdir build
 cd build
@@ -40,10 +76,14 @@ cd build
 COMMAND="npx --yes croct@latest --stateless --no-interaction --dnd use $CROCT_PROJECT_TEMPLATE"
 
 if is_expired "${CROCT_CLI_TOKEN:-}"; then
-  env -u CROCT_TOKEN \
-    CROCT_API_KEY="$CROCT_API_KEY" \
-    CROCT_SKIP_API_KEY_SETUP=true \
-    bash -c "$COMMAND"
+  if [ -n "${CROCT_API_KEY:-}" ]; then
+     env -u CROCT_TOKEN \
+        CROCT_API_KEY="$CROCT_API_KEY" \
+        CROCT_SKIP_API_KEY_SETUP=true \
+        bash -c "$COMMAND"
+  else
+     bash -c "npx --yes croct@latest --dnd use $CROCT_PROJECT_TEMPLATE"
+  fi
 else
   env -u CROCT_API_KEY \
     CROCT_TOKEN="$CROCT_CLI_TOKEN" \
