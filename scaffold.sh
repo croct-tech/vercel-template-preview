@@ -145,4 +145,18 @@ cd ..
 cp -rf build/*/* .
 rm -rf build
 
+mv vercel.json.template vercel.json
+
 create_next_config "./app"
+
+label="Create a free account"
+link="https://app.croct.com/signup"
+
+find app -type f \( -name '*.ts' -o -name '*.tsx' -o -name '*.js' -o -name '*.jsx' \) | while read -r file; do
+    sed -i '' \
+        -e "s|ctaLabel=\"[^\"]*\"|ctaLabel=\"$label\"|g" \
+        -e "s|label=\"Edit[^\"]*\"|label=\"$label\"|g" \
+        -e "s|ctaLink=\"[^\"]*\"|ctaLink=\"$link\"|g" \
+        -e "s|href=\"https://app\.croct\.com[^\"]*\"|href=\"$link\"|g" \
+        "$file"
+done
