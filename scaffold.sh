@@ -156,5 +156,6 @@ find app -type f \( -name '*.ts' -o -name '*.tsx' -o -name '*.js' -o -name '*.js
         -e "s|label=\"Edit[^\"]*\"|label=\"$label\"|g" \
         -e "s|ctaLink=\"https://app\.croct\.com[^\"?]*\(\?[^\"]*\)\"|ctaLink=\"$link\1\"|g" \
         -e "s|href=\"https://app\.croct\.com[^\"?]*\(\?[^\"]*\)\"|href=\"$link\1\"|g" \
+        -e "s|utm_medium=cli|utm_medium=preview|g" \
         "$file"
 done
