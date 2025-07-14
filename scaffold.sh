@@ -154,7 +154,7 @@ find app -type f \( -name '*.ts' -o -name '*.tsx' -o -name '*.js' -o -name '*.js
     sed -i \
         -e "s|ctaLabel=\"[^\"]*\"|ctaLabel=\"$label\"|g" \
         -e "s|label=\"Edit[^\"]*\"|label=\"$label\"|g" \
-        -e "s|ctaLink=\"[^\"]*\"|ctaLink=\"$link\"|g" \
-        -e "s|href=\"https://app\.croct\.com[^\"]*\"|href=\"$link\"|g" \
+        -e "s|ctaLink=\"https://app\.croct\.com[^\"?]*\(\?[^\"]*\)\"|ctaLink=\"$link\1\"|g" \
+        -e "s|href=\"https://app\.croct\.com[^\"?]*\(\?[^\"]*\)\"|href=\"$link\1\"|g" \
         "$file"
 done
