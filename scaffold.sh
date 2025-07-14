@@ -145,8 +145,6 @@ cd ..
 cp -rf build/*/* .
 rm -rf build
 
-mv vercel.json.template vercel.json
-
 create_next_config "./app"
 
 label="Create a free account"
